@@ -42,10 +42,8 @@ class SSDMobileNetV2FeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
                use_depthwise=False,
                override_base_feature_extractor_hyperparams=False):
     """MobileNetV2 Feature Extractor for SSD Models.
-
     Mobilenet v2 (experimental), designed by sandler@. More details can be found
     in //knowledge/cerebra/brain/compression/mobilenet/mobilenet_experimental.py
-
     Args:
       is_training: whether the network is in training mode.
       depth_multiplier: float depth multiplier for feature extractor.
@@ -77,13 +75,10 @@ class SSDMobileNetV2FeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
 
   def preprocess(self, resized_inputs):
     """SSD preprocessing.
-
     Maps pixel values to the range [-1, 1].
-
     Args:
       resized_inputs: a [batch, height, width, channels] float tensor
         representing a batch of images.
-
     Returns:
       preprocessed_inputs: a [batch, height, width, channels] float tensor
         representing a batch of images.
@@ -92,11 +87,9 @@ class SSDMobileNetV2FeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
 
   def extract_features(self, preprocessed_inputs):
     """Extract features from preprocessed inputs.
-
     Args:
       preprocessed_inputs: a [batch, height, width, channels] float tensor
         representing a batch of images.
-
     Returns:
       feature_maps: a list of tensors where the ith tensor has shape
         [batch, height_i, width_i, depth_i]
@@ -138,5 +131,4 @@ class SSDMobileNetV2FeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
               min_depth=self._min_depth,
               insert_1x1_conv=True,
               image_features=image_features)
-
     return feature_maps.values()

@@ -14,10 +14,8 @@
 # ==============================================================================
 
 """Functions to generate a list of feature maps based on image features.
-
 Provides several feature map generators that can be used to build object
 detection feature extractors.
-
 Object detection feature extractors usually are built by stacking two components
 - A base feature extractor such as Inception V3 and a feature map generator.
 Feature map generators build on the base feature extractors and produce a list
@@ -59,11 +57,9 @@ def _fire_module(inputs, squeeze_depth, expand_depth, name):
 
 def get_depth_fn(depth_multiplier, min_depth):
   """Builds a callable to compute depth (output channels) of conv filters.
-
   Args:
     depth_multiplier: a multiplier for the nominal depth.
     min_depth: a lower bound on the depth of filters.
-
   Returns:
     A callable that takes in a nominal depth and returns the depth to use.
   """
@@ -76,10 +72,8 @@ def get_depth_fn(depth_multiplier, min_depth):
 def multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
                                   min_depth, insert_1x1_conv, image_features):
   """Generates multi resolution feature maps from input image features.
-
   Generates multi-scale feature maps for detection as in the SSD papers by
   Liu et al: https://arxiv.org/pdf/1512.02325v2.pdf, See Sec 2.1.
-
   More specifically, it performs the following two tasks:
   1) If a layer name is provided in the configuration, returns that layer as a
      feature map.
@@ -89,13 +83,11 @@ def multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
      stride 2 resulting in a spatial resolution reduction by a factor of 2.
      By default convolution kernel size is set to 3, and it can be customized
      by caller.
-
   An example of the configuration for Inception V3:
   {
     'from_layer': ['Mixed_5d', 'Mixed_6e', 'Mixed_7c', '', '', ''],
     'layer_depth': [-1, -1, -1, 512, 256, 128]
   }
-
   Args:
     feature_map_layout: Dictionary of specifications for the feature map
       layouts in the following format (Inception V2/V3 respectively):
@@ -128,11 +120,9 @@ def multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
       should be inserted before shrinking the feature map.
     image_features: A dictionary of handles to activation tensors from the
       base feature extractor.
-
   Returns:
     feature_maps: an OrderedDict mapping keys (feature map names) to
       tensors where each tensor has shape [batch, height_i, width_i, depth_i].
-
   Raises:
     ValueError: if the number entries in 'from_layer' and
       'layer_depth' do not match.
@@ -157,34 +147,8 @@ def multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
       conv_kernel_size = feature_map_layout['conv_kernel_size'][index]
     if from_layer:
       feature_map = image_features[from_layer]
-      if from_layer in feature_map_keys:
-          from_layer = from_layer + "__"
       base_from_layer = from_layer
-      if index in [0,1]:
-          layer_name = '{}_2_Conv2d_{}_{}x{}_s2_{}'.format(
-            base_from_layer, index, conv_kernel_size, conv_kernel_size,
-            depth_fn(layer_depth))
-          #fire10 = _fire_module(from_layer, 96, 384, 'fire10')
-          #fire11 = _fire_module(fire10,     96, 384, 'fire11')
-          #feature_map_keys.append(fire11)
-          feature_map = slim.separable_conv2d(
-              feature_map,
-              None, [conv_kernel_size, conv_kernel_size],
-              depth_multiplier=1,
-              padding='SAME',
-              stride=1,
-              scope=layer_name + '_depthwise')
-          feature_map = slim.conv2d(
-              feature_map,
-              depth_fn(layer_depth), [1, 1],
-              padding='SAME',
-              stride=1,
-              scope=layer_name)
-          feature_map_keys.append(layer_name)
-      else:
-          feature_map_keys.append(from_layer)
-
-      #feature_map_keys.append(from_layer)
+      feature_map_keys.append(from_layer)
     else:
       pre_layer = feature_maps[-1]
       intermediate_layer = pre_layer
@@ -235,16 +199,13 @@ def multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
 
 def fpn_top_down_feature_maps(image_features, depth, scope=None):
   """Generates `top-down` feature maps for Feature Pyramid Networks.
-
   See https://arxiv.org/abs/1612.03144 for details.
-
   Args:
     image_features: list of tuples of (tensor_name, image_feature_tensor).
       Spatial resolutions of succesive tensors must reduce exactly by a factor
       of 2.
     depth: depth of output feature maps.
     scope: A scope name to wrap this op under.
-
   Returns:
     feature_maps: an OrderedDict mapping keys (feature map names) to
       tensors where each tensor has shape [batch, height_i, width_i, depth_i].
@@ -282,11 +243,9 @@ def fpn_top_down_feature_maps(image_features, depth, scope=None):
 def pooling_pyramid_feature_maps(base_feature_map_depth, num_layers,
                                  image_features):
   """Generates pooling pyramid feature maps.
-
   The pooling pyramid feature maps is motivated by
   multi_resolution_feature_maps. The main difference are that it is simpler and
   reduces the number of free parameters.
-
   More specifically:
    - Instead of using convolutions to shrink the feature map, it uses max
      pooling, therefore totally gets rid of the parameters in convolution.
@@ -295,16 +254,13 @@ def pooling_pyramid_feature_maps(base_feature_map_depth, num_layers,
    - Instead of independently making box predictions from individual maps, it
      shares the same classifier across different feature maps, therefore reduces
      the "mis-calibration" across different scales.
-
   See go/ppn-detection for more details.
-
   Args:
     base_feature_map_depth: Depth of the base feature before the max pooling.
     num_layers: Number of layers used to make predictions. They are pooled
       from the base feature.
     image_features: A dictionary of handles to activation tensors from the
       feature extractor.
-
   Returns:
     feature_maps: an OrderedDict mapping keys (feature map names) to
       tensors where each tensor has shape [batch, height_i, width_i, depth_i].
@@ -341,4 +297,4 @@ def pooling_pyramid_feature_maps(base_feature_map_depth, num_layers,
       feature_map_keys.append(feature_map_key)
       feature_maps.append(feature_map)
   return collections.OrderedDict(
-      [(x, y) for (x, y) in zip(feature_map_keys, feature_maps)])
+    [(x, y) for (x, y) in zip(feature_map_keys, feature_maps)])

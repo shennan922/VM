@@ -1,0 +1,105 @@
+item {
+  id:1
+  name:'914162'
+  display_name:'Aspirin_Cx10'
+}
+item {
+  id:2
+  name:'80469381'
+  display_name:'Aspirin_C_Forte_x10'
+}
+item {
+  id:3
+  name:'914170'
+  display_name:'Aspirin_Cx20'
+}
+item {
+  id:4
+  name:'80476345'
+  display_name:'Aspirin_Complex_Hot_x10'
+}
+item {
+  id:5
+  name:'81586013'
+  display_name:'Aspirin_Complex_Zatoki_x_10'
+}
+item {
+  id:6
+  name:'84343080'
+  display_name:'Aspirin_Effect_x10'
+}
+item {
+  id:7
+  name:'81786399'
+  display_name:'Aspirin_Pro_x20'
+}
+item {
+  id:8
+  name:'81786380'
+  display_name:'Aspirin_Pro_x8'
+}
+item {
+  id:9
+  name:'920588'
+  display_name:'Aspirin_500_mg_x10'
+}
+item {
+  id:10
+  name:'84330639'
+  display_name:'Dicoflor_30,_10caps'
+}
+item {
+  id:11
+  name:'84330698'
+  display_name:'Dicoflor_30,_12_sach'
+}
+item {
+  id:12
+  name:'84330647'
+  display_name:'Dicoflor_30,_30_caps'
+}
+item {
+  id:13
+  name:'84330663'
+  display_name:'Dicoflor_60,_10_caps'
+}
+item {
+  id:14
+  name:'84330671'
+  display_name:'Dicoflor_60,_20_caps'
+}
+item {
+  id:15
+  name:'84330701'
+  display_name:'Dicoflor_Complex,_10_pcs'
+}
+item {
+  id:16
+  name:'85074970'
+  display_name:'Dicoflor_Elektrolity,_6_portions'
+}
+item {
+  id:17
+  name:'84330752'
+  display_name:'Dicoflor_Drops_5ml'
+}
+item {
+  id:18
+  name:'dummy001'
+  display_name:'ASPIRIN_PRO_80_tabs_BOK'
+}
+item {
+  id:19
+  name:'dummy002'
+  display_name:'ASPIRIN_MUSUJACA_12'
+}
+item {
+  id:20
+  name:'dummy003'
+  display_name:'ASPIRIN_20'
+}
+item {
+  id:21
+  name:'bayer_competitor'
+  display_name:'bayer_competitor'
+}
