@@ -259,9 +259,14 @@ def to_tfrecord():
         json_data=json.loads(json_str)
         #empty=len(json_data.get("bndboxes"))==0
 
-        check_bndboxes(json_data)
-        tf_example = json_to_tf_example(json_data, FLAGS.data_dir, label_map_dict )
-        writer.write(tf_example.SerializeToString())
+        filename = json_data.get("filename")
+        check_full_path = os.path.join(FLAGS.data_dir, "photos", filename)
+        if os.path.exists(check_full_path):
+          check_bndboxes(json_data)
+          tf_example = json_to_tf_example(json_data, FLAGS.data_dir, label_map_dict )
+          writer.write(tf_example.SerializeToString())
+        else:
+          print(filename+" not exist")
 
     writer.close()
 
