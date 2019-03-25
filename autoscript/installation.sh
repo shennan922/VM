@@ -28,4 +28,6 @@ cp -r pycocotools $path_to_tensorflow/research/
 # Protobuf Compilation .From tensorflow/models/research/
 echo "Protobuf Compilation"
 cd $path_to_tensorflow/research/
-protoc object_detection/protos/*.proto --python_out=.
+wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip
+unzip protobuf.zip
+./bin/protoc object_detection/protos/*.proto --python_out=.
