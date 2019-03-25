@@ -45,7 +45,7 @@ with open(filename) as read_file:
         if line_num == 0:
             aspect_ratios = eachline
             aspect_ratios = aspect_ratios.replace("[","").replace(" ","").replace("]","").replace("\n","").split(',')
-            print(aspect_ratios)
+            #print(aspect_ratios)
         
         #if line_num == 1:
         #    scales = eachline
@@ -93,14 +93,14 @@ while line:
               p = line.find('min_scale')
            if p==-1:
               p = line.find('max_scale')
-#           print(str)
+#           #print(str)
            if not endScales:
                 line =initScalorratios(p,scales_last,'scales')
                 endScales = True
            else:
                 line=''
         if str.startswith('aspect_ratios'):
-           print(str)
+           #print(str)
            p = line.index('aspect_ratios')
            if not endRatios:
                 line = initScalorratios(p, aspect_ratios, 'aspect_ratios')
