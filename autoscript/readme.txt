@@ -1,4 +1,5 @@
 installation description
+#From tensorflow/models/research/        path_to_tensorflow=tensorflow/models
 sh installation.sh /home/test_user/path_to_tensorflow
 
 you can test if tensorflow is installed successfully using 'python2 test_tensorflow.py'
@@ -27,6 +28,7 @@ you can test if tensorflow is installed successfully using 'python2 test_tensorf
 7.If you don't want to split dataset, 'onedataset' set to 'Y'
 8.'scales' can define by yourself according to 'num_layer'.
 9.In sendemail.py, you should update the receiver email address.
+10.label_map_path,pipeline_config_path,train_path will use default path, if you don't input their path.
 --------------------------------------------------------------------------------------------------------------------
 
 python2 train_eval.py \
