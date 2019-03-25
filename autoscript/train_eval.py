@@ -35,8 +35,26 @@ tf.app.flags.DEFINE_string(
     'foldername', '', 'foldername ')
 FLAGS = tf.app.flags.FLAGS
 
-train_path = FLAGS.train_path.replace("/object_detection","")
-os.environ['PYTHONPATH']=':'+train_path+':'+train_path+'/slim'
+selfpath = os.path.dirname(os.path.realpath(__file__))
+
+if FLAGS.label_map_path == '':
+    label_map_path = selfpath + '/../bin/pascal_label_map.pbtxt'
+else:
+    label_map_path = FLAGS.label_map_path
+
+if FLAGS.pipeline_config_path == '':
+    pipeline_config_path = selfpath + '/../bin/rb_harpic_ssd_lite_mbv2_4layers.config'
+else:
+    pipeline_config_path = FLAGS.pipeline_config_path
+
+if FLAGS.train_path == '':
+    train_path = selfpath + '/../research/object_detection'
+    pwd = train_path.replace("/object_detection","")
+else:
+    train_path = FLAGS.train_path
+    pwd = FLAGS.train_path.replace("/object_detection","")
+
+os.environ['PYTHONPATH']=':'+pwd+':'+pwd+'/slim'
 
 if(FLAGS.results_folder == ''):
     #create train,eval folders
@@ -187,8 +205,8 @@ if(FLAGS.results_folder == ''):
     #---------------------------------------------------------------------------------------------------
     #TF_Record
     if FLAGS.onedataset == 'Y':
-        returnvalue=os.system("python2 " + FLAGS.train_path +"/dataset_tools/create_np_tf_record.py\
-        --label_map_path=" + FLAGS.label_map_path +"\
+        returnvalue=os.system("python2 " + train_path +"/dataset_tools/create_np_tf_record.py\
+        --label_map_path=" + label_map_path +"\
         --data_dir=" + trainDir +"\
         --output_path=" + results_folder +"/TFRecord_train/np_train_onedataset.record-00000-of-00010")
         if returnvalue == 0:
@@ -197,8 +215,8 @@ if(FLAGS.results_folder == ''):
             print('When make train TFRecord ,error occurred , stop next step ,please check your files.')
             exit()
     else:
-        returnvalue=os.system("python2 " + FLAGS.train_path +"/dataset_tools/create_np_tf_record.py\
-            --label_map_path=" + FLAGS.label_map_path +"\
+        returnvalue=os.system("python2 " + train_path +"/dataset_tools/create_np_tf_record.py\
+            --label_map_path=" + label_map_path +"\
             --data_dir=" + trainDir +"\
             --output_path=" + results_folder +"/TFRecord_train/np_train.record-00000-of-00010")
         if returnvalue == 0:
@@ -206,8 +224,8 @@ if(FLAGS.results_folder == ''):
         else:
             print('When make train TFRecord ,error occurred , stop next step ,please check your files.')
             exit()
-        returnvalue=os.system("python2 " + FLAGS.train_path +"/dataset_tools/create_np_tf_record.py\
-            --label_map_path=" + FLAGS.label_map_path +"\
+        returnvalue=os.system("python2 " + train_path +"/dataset_tools/create_np_tf_record.py\
+            --label_map_path=" + label_map_path +"\
             --data_dir=" + evalDir +"\
             --output_path=" + results_folder +"/TFRecord_eval/np_eval.record-00000-of-00010")
         if returnvalue == 0:
@@ -229,12 +247,12 @@ if(FLAGS.results_folder == ''):
     if FLAGS.onedataset == 'Y':
         returnvalue=os.system("python2 config_handle.py\
         --num_classes=" + str(NUM_CLASSES) +" \
-        --pipeline_config_path=" + FLAGS.pipeline_config_path +" \
+        --pipeline_config_path=" + pipeline_config_path +" \
         --pipeline_config_path_new=" + results_folder + "/image_train/new.config \
         --scales=" + FLAGS.scales +" \
         --train_path=" + results_folder +"/TFRecord_train/np_train_onedataset.record-00000-of-00010 \
         --eval_path=" + results_folder +"/TFRecord_train/np_train_onedataset.record-00000-of-00010 \
-        --label_map_path=" + FLAGS.label_map_path +" \
+        --label_map_path=" + label_map_path +" \
         --input_folder=" + results_folder +"/image_train")
         if returnvalue == 0:
             print('onedataset pipeline_config update success!')
@@ -244,12 +262,12 @@ if(FLAGS.results_folder == ''):
     else:
         returnvalue=os.system("python2 config_handle.py\
             --num_classes=" + str(NUM_CLASSES) +" \
-            --pipeline_config_path=" + FLAGS.pipeline_config_path +" \
+            --pipeline_config_path=" + pipeline_config_path +" \
             --pipeline_config_path_new=" + results_folder + "/image_train/new.config \
             --scales=" + FLAGS.scales +" \
             --train_path=" + results_folder +"/TFRecord_train/np_train.record-00000-of-00010 \
             --eval_path=" + results_folder +"/TFRecord_eval/np_eval.record-00000-of-00010 \
-            --label_map_path=" + FLAGS.label_map_path +" \
+            --label_map_path=" + label_map_path +" \
             --input_folder=" + results_folder +"/image_train")
         if returnvalue == 0:
             print('pipeline_config update success!')
@@ -260,7 +278,7 @@ else:
     results_folder = FLAGS.results_folder
 #---------------------------------------------------------------------------------------------------
 #Auto train
-returnvalue=os.system("python2 " + FLAGS.train_path +"/model_main_np.py\
+returnvalue=os.system("python2 " + train_path +"/model_main_np.py\
     --pipeline_config_path=" + results_folder + "/image_train/new.config \
     --model_dir=" + results_folder + "/model \
     --num_train_steps=" + FLAGS.num_train_steps +" \
@@ -284,7 +302,7 @@ filelist = map(int,filelist)
 lastckpt = 'model.ckpt-' + str(max(filelist))
 print(lastckpt)
 
-returnvalue=os.system("python2 " + FLAGS.train_path +"/export_inference_graph.py \
+returnvalue=os.system("python2 " + train_path +"/export_inference_graph.py \
     --pipeline_config_path=" + results_folder + "/image_train/new.config \
     --trained_checkpoint_prefix=" + results_folder +"/model/" + lastckpt +" \
     --output_directory=" + results_folder +"/pb")
@@ -307,7 +325,7 @@ returnvalue=os.system("python2 test_json.py \
     --PATH_TO_CKPT=" + results_folder +"/pb/opt.pb \
     --PATH_TEST_IDS=" + results_folder +"/image_eval/photos/jpg.txt \
     --DIR_IMAGE=" + results_folder +"/image_eval/photos \
-    --PATH_TO_LABELS=" + FLAGS.label_map_path +" \
+    --PATH_TO_LABELS=" + label_map_path +" \
     --NUM_CLASSES="'NUM_CLASSES'"")
 if returnvalue == 0:
     print('Evaluate success!')

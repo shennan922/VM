@@ -23,9 +23,9 @@ echo "start installing pycocotools folder"
 git clone https://github.com/cocodataset/cocoapi.git
 cd cocoapi/PythonAPI
 make
-cp -r pycocotools $path_to_tensorflow/models/research/
+cp -r pycocotools $path_to_tensorflow/research/
 
 # Protobuf Compilation .From tensorflow/models/research/
 echo "Protobuf Compilation"
-cd $path_to_tensorflow/models/research/
+cd $path_to_tensorflow/research/
 protoc object_detection/protos/*.proto --python_out=.

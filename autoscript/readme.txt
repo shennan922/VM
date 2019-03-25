@@ -1,5 +1,7 @@
 installation description
-sh installation.sh /home/test_user
+sh installation.sh /home/test_user/path_to_tensorflow
+
+you can test if tensorflow is installed successfully using 'python2 test_tensorflow.py'
 
 1.train_eval is the begining script.
 2.+object_detection/
