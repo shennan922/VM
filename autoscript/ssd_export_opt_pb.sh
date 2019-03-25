@@ -21,7 +21,7 @@ echo "$results_folder/pb/frozen_inference_graph.pb"
 #--pipeline_config_path "$TRAIN_DIR/pipeline.config" --trained_checkpoint_prefix    \
 #"$TRAIN_DIR/model.ckpt-$SEQ_NO" --input_type image_tensor --output_directory /tmp/my.pb  \
 
-~/bin/transform_graph --in_graph=$results_folder/pb/frozen_inference_graph.pb  \
+../bin/transform_graph --in_graph=$results_folder/pb/frozen_inference_graph.pb  \
     --out_graph=$results_folder/pb/opt.pb \
     --inputs='image_tensor' \
     --outputs='detection_boxes,detection_scores,detection_classes,num_detections' \
