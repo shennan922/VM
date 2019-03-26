@@ -119,13 +119,6 @@ if(FLAGS.results_folder == ''):
                 num += 1
     copy2((FLAGS.data_dir + '/templates.json'),evalDir)
     copy2((FLAGS.data_dir + '/templates.json'),trainDir)
-
-    if os.path.exists(trainDir+'/ckpt') ==False:
-        os.mkdir(trainDir+'/ckpt')
-    ckpt_files = os.listdir(selfpath + '/../ckpt')
-    for filename in ckpt_files:
-        ckptname = os.path.join((selfpath + '/../ckpt'), filename)
-        copy2(ckptname, (trainDir + '/ckpt'))
     #---------------------------------------------------------------------------------------------------
     #create Annotations folder
     if os.path.exists(trainDir + '/photos/Annotations') ==False:
