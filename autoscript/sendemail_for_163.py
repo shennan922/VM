@@ -5,18 +5,24 @@ from email.mime.text import MIMEText
 from email.header import Header
 import tensorflow as tf
 
-mail_host = "smtp.gmail.com"
+mail_host = "smtp.163.com"
 
-user = "IrisLi0602@gmail.com"
-passwd = "lnyxlm5865865"
+user = "18642687347@163.com"
+passwd = "lm5865865"
 
-send = 'IrisLi0602@gmail.com'
-rec = ['IrisLi0602@gmail.com']
+send = '18642687347@163.com'
+rec = ['18642687347@163.com']
 subject = 'Accuracy report'
 
 logpath = '../train_result.txt'
 tf.app.flags.DEFINE_string(
     'path', '', 'result directory ')
+tf.app.flags.DEFINE_string(
+    'create_pb_step', '', 'create_pb_step ')
+tf.app.flags.DEFINE_string(
+    'data_dir', '', 'images directory ')
+tf.app.flags.DEFINE_string(
+    'results_folder', '', 'result directory ')
 FLAGS = tf.app.flags.FLAGS
 
 data = ''
@@ -31,7 +37,12 @@ with open(os.path.join(FLAGS.path)) as src:
     src.close()
 
 # print data
-total = log + '\n' + '\n' + data
+create_pb_step = FLAGS.create_pb_step
+data_dir = FLAGS.data_dir
+results_folder = FLAGS.results_folder
+details = 'Step:' + create_pb_step + '\n' + 'Data_dir:' + data_dir + '\n' +'Results_dir:' + results_folder
+
+total = details + '\n' + '\n' + log + '\n' + '\n' + data
 
 msg = MIMEText(total, 'plain', 'utf-8')
 msg['Subject'] = Header(subject, 'utf-8')

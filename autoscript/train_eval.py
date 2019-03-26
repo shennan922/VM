@@ -318,7 +318,7 @@ if returnvalue == 0:
     print('Process pb file success!')
 else:
     print('When processing pb file ,error occurred , stop next step ,please check your files.')
-    #exit()
+    exit()
 #---------------------------------------------------------------------------------------------------
 returnvalue=os.system("python2 test_json.py \
     --PATH_OUTPUT=" + results_folder +"/image_eval/photos/AnnotationsPred/ \
@@ -342,5 +342,8 @@ else:
 #---------------------------------------------------------------------------------------------------
 #send email
 os.system("python2 sendemail.py \
-    --path=" + results_folder +"/image_eval/result.txt")
+    --path=" + results_folder +"/image_eval/result.txt \
+    --create_pb_step=" + FLAGS.num_train_steps + " \
+    --data_dir=" + FLAGS.data_dir + " \
+    --results_folder=" + results_folder +"")
 print('Send accuracy report end')

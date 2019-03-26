@@ -1,9 +1,11 @@
 installation description
-#From tensorflow/models/research/        path_to_tensorflow=tensorflow/models
+#tensorflow/models/research      path_to_tensorflow=tensorflow/models
 sh installation.sh /home/test_user/path_to_tensorflow
 
-you can test if tensorflow is installed successfully using 'python2 test_tensorflow.py'
+*Please move 'transform_graph' to VM/bin/
 
+you can test if tensorflow is installed successfully using 'python2 test_tensorflow.py'
+------------------------------------------------------------------------------------------------------------------
 1.train_eval is the begining script.
 2.+object_detection/
 	train_eval.py
@@ -46,7 +48,13 @@ python2 train_eval.py \
 	--foldername=test \
 	--results_folder=/home/test_user/dataset_harpic/Results_folder/Results20190129131726	
 
-
+python2 train_eval.py \
+	--data_dir=/home/test_user/dataset_harpic/rb_harpic \
+	--num_train_steps=100 \
+	--num_eval_steps=10 \
+	--onedataset=Y \
+	--scales=[0.025,0.08,0.16,0.32] \
+	--foldername=test
 
 	//if you need go on train//--results_folder=/home/test_user/Results_folder/Results20190129131726
 

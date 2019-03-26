@@ -17,6 +17,8 @@ echo "start installing jupyter"
 pip2 install --user jupyter
 echo "start installing matplotlib"
 pip2 install --user matplotlib
+echo "start installing pandas"
+pip2 install --user pandas
 
 #COCO API installation
 echo "start installing pycocotools folder"
@@ -24,6 +26,8 @@ git clone https://github.com/cocodataset/cocoapi.git
 cd cocoapi/PythonAPI
 make
 cp -r pycocotools $path_to_tensorflow/research/
+cd ../..
+cp cocoeval.py $path_to_tensorflow/research/pycocotools
 
 # Protobuf Compilation .From tensorflow/models/research/
 echo "Protobuf Compilation"
