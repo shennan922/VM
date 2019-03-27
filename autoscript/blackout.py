@@ -12,8 +12,8 @@ from multiprocessing.pool import ThreadPool
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--min_pixel", default=90 * 90, help="Minimum Pixel like 90x90", type=int)
-parser.add_argument("--input_folder",default="C:/Users/miao.d.li/Desktop/OneDrive - Accenture/Attachments/DMI/test", type=str, help="put entire directory")
-parser.add_argument("--out_folder",default="C:/Users/miao.d.li/Desktop/OneDrive - Accenture/Attachments/DMI/test", help=None, type=str)
+parser.add_argument("--input_folder", type=str, help="put entire directory")
+parser.add_argument("--out_folder", help=None, type=str)
 
 args = parser.parse_args()
 
@@ -116,7 +116,6 @@ def resize_json_image(json_data, image, json_path, photo_file, total):
     new_h = int(h*k_resize)
     #json_data["image_width"] = new_w
     #json_data["image_height"] = new_h
-    Fg = False
     ignore_list = []
     for i in range(len(json_data["bndboxes"])):
         json_data["bndboxes"][i]["x"] = int(json_data["bndboxes"][i]["x"] * k_resize)
