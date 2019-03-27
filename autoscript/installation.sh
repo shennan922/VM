@@ -1,5 +1,10 @@
 path_to_tensorflow=$1
 
+#unistall existing tensorflow
+echo "unistall existing tensorflow"
+pip2 uninstall tensorflow
+pip2 uninstall tensorflow-gpu
+
 #install tensorflow 1.9.0
 echo "start installing tensorflow 1.9.0"
 pip2 install --user tensorflow-1.9.0-cp27-cp27mu-linux_x86_64.whl

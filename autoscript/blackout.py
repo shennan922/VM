@@ -12,13 +12,13 @@ from multiprocessing.pool import ThreadPool
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--min_pixel", default=90 * 90, help="Minimum Pixel like 90x90", type=int)
-parser.add_argument("--input_folder", type=str, help="put entire directory")
-parser.add_argument("--out_folder", help=None, type=str)
+parser.add_argument("--input_folder",default="C:/Users/miao.d.li/Desktop/OneDrive - Accenture/Attachments/DMI/test", type=str, help="put entire directory")
+parser.add_argument("--out_folder",default="C:/Users/miao.d.li/Desktop/OneDrive - Accenture/Attachments/DMI/test", help=None, type=str)
 
 args = parser.parse_args()
 
 DEBUG = False
-
+counter = 1
 
 def find_image_files(out_folder):
     photos_path = join(out_folder, 'photos')
@@ -70,7 +70,9 @@ target_w = 900
 target_h = 1200
 
 
-def resize_json_image(json_data, image, json_path, photo_file):
+def resize_json_image(json_data, image, json_path, photo_file, total):
+    global counter
+    WRITE = False
     new_w, new_h = target_w, target_h
     (h, w, c) = image.shape
     bndboxes = json_data["bndboxes"]
@@ -114,12 +116,21 @@ def resize_json_image(json_data, image, json_path, photo_file):
     new_h = int(h*k_resize)
     #json_data["image_width"] = new_w
     #json_data["image_height"] = new_h
+    Fg = False
+    ignore_list = []
     for i in range(len(json_data["bndboxes"])):
         json_data["bndboxes"][i]["x"] = int(json_data["bndboxes"][i]["x"] * k_resize)
         json_data["bndboxes"][i]["y"] = int(json_data["bndboxes"][i]["y"] * k_resize)
         json_data["bndboxes"][i]["w"] = int(json_data["bndboxes"][i]["w"] * k_resize)
         json_data["bndboxes"][i]["h"] = int(json_data["bndboxes"][i]["h"] * k_resize)
+        ignore_list.append(json_data["bndboxes"][i]["ignore"])
     image = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
+    if False in ignore_list:
+        WRITE = True
+    else:
+        if counter <= total * 0.15:
+            WRITE = True
+        counter = counter + 1
 
     aspect_ratio= new_w*1.0/new_h
      
@@ -137,12 +148,14 @@ def resize_json_image(json_data, image, json_path, photo_file):
 
     json_data["image_width"] = new_w
     json_data["image_height"] = new_h
-
-    WRITE = True
+    
     if WRITE:
         with open(json_path, "w") as json_file:
             json.dump(json_data, json_file, indent=4)
         cv2.imwrite(photo_file, image)
+    else:
+        os.remove(photo_file)
+        os.remove(json_path)
 
 
 def black_out_one(json_data, image):
@@ -194,7 +207,7 @@ if __name__ == '__main__':
     files = find_files(out_folder)
     total = len(files)
 
-    def worker(photo_path, json_path):
+    def worker(photo_path, json_path, counter):
         try:
             image = cv2.imread(photo_path)
         except:
@@ -204,16 +217,15 @@ if __name__ == '__main__':
             json_data = json.load(json_file)
 
         black_out_one(json_data, image)
-        resize_json_image(json_data, image, json_path, photo_path)
+        resize_json_image(json_data, image, json_path, photo_path, total)
         image = None
 
     results = []
     pool = ThreadPool(8)
-    counter = 0
+    
     print("Start iterating over files. Total files: {}".format(total))
     for (photo_path, json_path) in files:
-        results.append(pool.apply_async(worker, args=("" + photo_path, json_path)))
-
+        results.append(pool.apply_async(worker, args=("" + photo_path, json_path, total)))
         #if counter % 20 == 0:
         #    print("{}% Completed: {}/{}".format(done, counter, total))
     percentage = -1
